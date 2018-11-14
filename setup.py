@@ -6,7 +6,7 @@ from subprocess import check_output
 here = path.abspath(path.dirname(__file__))
 
 check_output(
-    'pandoc --from=jekyll --to=rst --output=' + path.join(here, 'README.rst') + ' ' + path.join(here, 'README.md'),
+    'pandoc --from=markdown --to=rst --output=' + path.join(here, 'README.rst') + ' ' + path.join(here, 'README.md'),
     shell=True
 )
 
