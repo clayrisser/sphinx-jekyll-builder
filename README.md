@@ -12,7 +12,10 @@ Please ★ this repo if you found it useful ★ ★ ★
 
 ## Features
 
-* Generates jekyll
+* Generates markdown
+* Supports frontmatter
+* Compatible with [jekyll](https://jekyllrb.com)
+* Compatible with [gatsby](https://www.gatsbyjs.org/)
 
 
 ## Installation
