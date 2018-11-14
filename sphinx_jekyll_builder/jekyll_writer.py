@@ -1,4 +1,4 @@
-from .sphinx_markdown_builder.markdown_writer import MarkdownTranslator, MarkdownWriter
+from sphinx_markdown_builder.markdown_writer import MarkdownTranslator, MarkdownWriter
 
 class JekyllTranslator(MarkdownTranslator):
     pass

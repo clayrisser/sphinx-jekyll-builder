@@ -25,7 +25,7 @@ class JekyllBuilder(Builder):
 
     current_docname = None
 
-    jekyll_http_base = 'https://localhost'
+    markdown_http_base = 'https://localhost'
 
     def init(self):
         self.secnumbers = {}
