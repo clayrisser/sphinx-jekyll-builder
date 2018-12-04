@@ -8,7 +8,7 @@ class JekyllTranslator(MarkdownTranslator):
 
     def visit_document(self, node):
         self.title = getattr(self.builder, 'current_docname')
-        super().visit_document(node)
+        super(JekyllTranslator, self).visit_document(node)
 
     def depart_document(self, node):
         variables = munchify({
@@ -20,16 +20,16 @@ class JekyllTranslator(MarkdownTranslator):
         variables_yaml = yaml.safe_dump(variables)
         frontmatter = '---\n' + variables_yaml + '---\n'
         self.add(frontmatter, section='head')
-        super().depart_document(node)
+        super(JekyllTranslator, self).depart_document(node)
 
     def visit_title(self, node):
         if not self.visited_title:
             self.title = node.astext()
         self.visited_title = True
-        super().visit_title(node)
+        super(JekyllTranslator, self).visit_title(node)
 
     def depart_title(self, node):
-        super().depart_title(node)
+        super(JekyllTranslator, self).depart_title(node)
 
 class JekyllWriter(MarkdownWriter):
     translator_class = JekyllTranslator
