@@ -58,7 +58,7 @@ class JekyllBuilder(Builder):
 
     def create_context(self):
         ctx = munchify({
-            'date': datetime.datetime.utcnow().isoformat()
+            'date': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
         })
         return ctx
 
