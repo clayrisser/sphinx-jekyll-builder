@@ -9,6 +9,7 @@ Jinja2==2.10
 MarkupSafe==1.1.0
 munch==2.3.2
 packaging==18.0
+pydash==4.7.4
 Pygments==2.2.0
 pyparsing==2.3.0
 pytz==2018.7

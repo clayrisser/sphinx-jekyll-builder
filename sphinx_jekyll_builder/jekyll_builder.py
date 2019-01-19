@@ -1,12 +1,13 @@
 from .jekyll_writer import JekyllWriter, JekyllTranslator
 from docutils.io import StringOutput
 from io import open
+from munch import munchify
 from os import path
-from sphinx.builders import Builder
 from sphinx.builders import Builder
 from sphinx.locale import __
 from sphinx.util import logging
 from sphinx.util.osutil import ensuredir, os_path
+import datetime
 
 if False:
     from typing import Any, Dict, Iterator, Set, Tuple
@@ -53,6 +54,13 @@ class JekyllBuilder(Builder):
 
     def prepare_writing(self, docnames):
         self.writer = JekyllWriter(self)
+        self.ctx = self.create_context()
+
+    def create_context(self):
+        ctx = munchify({
+            'date': datetime.datetime.utcnow().isoformat()
+        })
+        return ctx
 
     def write_doc(self, docname, doctree):
         self.current_docname = docname
