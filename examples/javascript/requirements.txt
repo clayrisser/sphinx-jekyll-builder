@@ -28,4 +28,4 @@ sphinx-markdown-builder==0.2.0
 sphinx-rtd-theme==0.2.4
 sphinxcontrib-websupport==1.1.0
 typing==3.6.6
-urllib3==1.24.1
+urllib3==1.24.2
