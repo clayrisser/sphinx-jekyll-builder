@@ -22,4 +22,4 @@ Sphinx==1.8.3
 sphinx-markdown-builder==0.4.0
 sphinxcontrib-websupport==1.1.0
 typing==3.6.6
-urllib3==1.24.1
+urllib3==1.24.2
