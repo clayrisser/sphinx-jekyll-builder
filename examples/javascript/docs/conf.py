@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from recommonmark.transform import AutoStructify
 from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
 
 author = 'Jam Risser'
 
@@ -62,12 +62,6 @@ pygments_style = 'sphinx'
 
 release = '0.0.5'
 
-source_parsers = {
-    '.md': CommonMarkParser
-}
-
-source_suffix = ['.rst', '.md']
-
 templates_path = ['_templates']
 
 texinfo_documents = [(
@@ -85,13 +79,15 @@ todo_include_todos = False
 version = '0.0.5'
 
 def setup(app):
-    app.add_config_value('recommonmark_config', {
+    app.add_source_suffix('.md', 'markdown')
+    app.add_source_suffix('.rst', 'restructuredtext')
+    app.add_source_parser(CommonMarkParser)
+    app.add_config_value('markdown_parser_config', {
         'auto_toc_tree_section': 'Content',
-        'enable_auto_doc_ref': True,
         'enable_auto_toc_tree': True,
         'enable_eval_rst': True,
         'enable_inline_math': True,
-        'enable_math': True
+        'enable_math': True,
     }, True)
     app.add_stylesheet('styles/main.css')
     app.add_javascript('scripts/main.js')
