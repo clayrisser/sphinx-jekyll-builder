@@ -5,6 +5,9 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/sphinx-jekyll-builder.svg?style=flat-square)](https://pypi.org/project/sphinx-jekyll-builder)
 [![GitHub stars](https://img.shields.io/github/stars/codejamninja/sphinx-jekyll-builder.svg?style=flat-square&label=Stars)](https://github.com/codejamninja/sphinx-jekyll-builder)
 
+
+![](assets/sphinx-jekyll-builder.png)
+
 > sphinx builder that outputs jekyll compatible markdown files with frontmatter
 
 Please ★ this repo if you found it useful ★ ★ ★
