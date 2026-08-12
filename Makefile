@@ -1,56 +1,68 @@
-CWD := $(shell pwd)
-ARGS := ""
+.POSIX:
+export ROOTDIR ?= $(eval ROOTDIR := $(shell git rev-parse --show-toplevel))$(ROOTDIR)
+include $(ROOTDIR)/make.mk
 
-.PHONY: all
-all: clean
+.DEFAULT_GOAL := build
 
-.PHONY: start
-start: env
-	@env/bin/python3 anydb $(ARGS)
+ASDF_VERSION ?= v0.18.0
+.PHONY: prepare prepare/asdf prepare/cloc
+prepare: sudo
+	@command -v asdf >/dev/null 2>&1 || $(MAKE) prepare/asdf
+	@command -v cloc >/dev/null 2>&1 || $(MAKE) prepare/cloc
+	@awk '!/^#/ && NF {print $$1}' .tool-versions | \
+		while read t; do asdf plugin add "$$t" 2>/dev/null || true; done
+	@rcfile=$$(mktemp); \
+		{ asdf install 2>&1; echo $$? >$$rcfile; } | grep --line-buffered -v 'is already installed' || true; \
+		rc=$$(cat $$rcfile); rm -f $$rcfile; exit $$rc
+	@$(UV) sync
+prepare/asdf:
+	@command -v brew >/dev/null 2>&1 && brew install asdf || { \
+		o=$$(uname | tr A-Z a-z); a=$$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/'); \
+		curl -fsSL "https://github.com/asdf-vm/asdf/releases/download/$(ASDF_VERSION)/asdf-$(ASDF_VERSION)-$$o-$$a.tar.gz" \
+			| $(SUDO) tar -xz -C /usr/local/bin asdf; \
+	}
+prepare/cloc:
+	@$(PKG_INSTALL) cloc
 
-.PHONY: install
-install: env
-
-.PHONY: uninstall
-uninstall:
-	-@rm -rf env >/dev/null || true
-
-.PHONY: reinstall
-reinstall: uninstall install
-
-env:
-	@virtualenv env
-	@env/bin/pip3 install -r ./requirements.txt
-	@echo ::: ENV :::
-
-.PHONY: freeze
-freeze:
-	@env/bin/pip3 freeze > ./requirements.txt
-	@echo ::: FREEZE :::
+.PHONY: configure
+configure:
+	@for cmd in asdf $(UV) $(CLOC); do \
+		command -v $$cmd >/dev/null 2>&1 || { echo "$$cmd is missing, run \`make prepare\`"; exit 1; }; \
+	done
 
 .PHONY: build
-build: dist
+build: configure
+	@$(UV) build
 
-dist: clean install
-	@env/bin/python3 setup.py sdist
-	@env/bin/python3 setup.py bdist_wheel
-	@echo ran dist
+.PHONY: test
+test: test/unit
 
-.PHONY: publish
-publish: dist
-	@twine upload dist/*
-	@echo published
+.PHONY: test/unit
+test/unit: configure
+	@$(PYTEST) -m 'not e2e' --cov=sphinx_jekyll_builder --cov-report=term --cov-report=xml:coverage.xml
 
-.PHONY: link
-link: install
-	@pip3 install -e .
+.PHONY: test/e2e
+test/e2e: configure
+	@$(PYTEST) -m e2e
 
-.PHONY: unlink
-unlink: install
-	-@rm -r $(shell find . -name '*.egg-info') 2>/dev/null | true
+.PHONY: format
+format: configure
+	@$(BLACK) .
+
+.PHONY: lint
+lint: configure
+	@$(BLACK) --check .
+	@$(BASEDPYRIGHT)
+
+.PHONY: count
+count: configure
+	@$(CLOC) --vcs=git
 
 .PHONY: clean
 clean:
-	-@rm -rf */__pycache__ */*/__pycache__ README.rst dist build \
-		example/.tmp *.egg-info >/dev/null || true
-	@echo ::: CLEAN :::
+	@rm -rf dist coverage.xml .coverage .pytest_cache \
+		sphinx_jekyll_builder/__pycache__ tests/__pycache__ examples/basic/build
+
+.PHONY: purge
+purge: clean
+	@$(GIT) clean -fxd
