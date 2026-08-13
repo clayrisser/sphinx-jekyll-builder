@@ -1,0 +1,73 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sphinx-jekyll-builder"
+version = "0.4.0"
+description = "sphinx builder that outputs jekyll compatible markdown files with frontmatter"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Clay Risser", email = "clayrisser@gmail.com" }]
+keywords = ["sphinx", "docs", "documentation", "jekyll", "markdown", "frontmatter"]
+requires-python = ">=3.10"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Utilities",
+  "Topic :: Documentation :: Sphinx",
+  "Framework :: Sphinx :: Extension",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+  "pyyaml>=6.0",
+  "sphinx>=7.0",
+  "sphinx-markdown-builder>=0.6.8",
+]
+
+[project.urls]
+Homepage = "https://gitlab.com/bitspur/misc/sphinx-jekyll-builder"
+Repository = "https://gitlab.com/bitspur/misc/sphinx-jekyll-builder"
+Changelog = "https://gitlab.com/bitspur/misc/sphinx-jekyll-builder/-/blob/main/CHANGELOG.md"
+Issues = "https://gitlab.com/bitspur/misc/sphinx-jekyll-builder/-/issues"
+
+[project.entry-points."sphinx.builders"]
+jekyll = "sphinx_jekyll_builder"
+
+[dependency-groups]
+dev = [
+  "basedpyright>=1.29",
+  "black>=25.1",
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["sphinx_jekyll_builder"]
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.basedpyright]
+include = ["sphinx_jekyll_builder", "tests", "examples"]
+typeCheckingMode = "standard"
+pythonVersion = "3.10"
+
+[[tool.basedpyright.executionEnvironments]]
+root = "tests"
+extraPaths = ["tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "e2e: end-to-end tests that build a sample project through the sphinx-build CLI",
+]
+
+[tool.coverage.run]
+source = ["sphinx_jekyll_builder"]
